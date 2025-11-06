@@ -30,5 +30,6 @@ const schema_users = new mongoose.Schema<User>({
 });
 
 const rating_system_users = mongoose.model("users", schema_users);
+const task_manager_users = mongoose.model("users-task-manger", schema_users);
 
 export default rating_system_users
