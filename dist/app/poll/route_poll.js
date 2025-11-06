@@ -1,6 +1,7 @@
 // File: ./src/features/poll/poll.feature.ts
-import express, {} from 'express';
+import { Router, } from 'express';
 import { Schema, model, Document, Types } from 'mongoose';
+import auth from '../../middleware/auth.js';
 // ----------------------------------------------------------------
 // 2. MONGOOSE SCHEMA
 // ----------------------------------------------------------------
@@ -60,6 +61,7 @@ const pollController = {
         try {
             // 1. Get user data from auth middleware (req.user)
             const user = req.user;
+            console.log(req.user);
             if (!user) {
                 return res.status(401).json({ message: 'Authentication required.' });
             }
@@ -100,6 +102,55 @@ const pollController = {
             next(error);
         }
     },
+    getMyPolls: async (req, res, next) => {
+        try {
+            // 1. Get user data from auth middleware
+            const user = req.user;
+            if (!user) {
+                return res.status(401).json({ message: 'Authentication required.' });
+            }
+            const { email: userEmail } = user;
+            const polls = await Poll.find({ creatorEmail: userEmail });
+            // 5. Send success response
+            return res.status(200).json(polls);
+        }
+        catch (error) {
+            next(error);
+        }
+    },
+    allPolls: async (req, res, next) => {
+        try {
+            // 1. Get user data from auth middleware
+            const user = req.user;
+            if (!user) {
+                return res.status(401).json({ message: 'Authentication required.' });
+            }
+            // 4. Find all polls matching the query
+            const polls = await Poll.find({});
+            // 5. Send success response
+            return res.status(200).json(polls);
+        }
+        catch (error) {
+            next(error);
+        }
+    },
+    getPollByName: async (req, res, next) => {
+        try {
+            // 1. Get user data from auth middleware
+            const user = req.user;
+            if (!user) {
+                return res.status(401).json({ message: 'Authentication required.' });
+            }
+            const { name } = req.query;
+            // 4. Find all polls matching the query
+            const polls = await Poll.find({ name: name });
+            // 5. Send success response
+            return res.status(200).json(polls);
+        }
+        catch (error) {
+            next(error);
+        }
+    },
     // --- Other CRUD methods (GET, PUT, DELETE) would go here ---
     // e.g., getMyPolls, getPollById, updatePoll, deletePoll
 };
@@ -109,9 +160,12 @@ const pollController = {
 /**
  * Express router for all poll-related routes.
  */
-const pollRouter = express.Router();
+const pollRouter = Router();
 // POST /api/polls/
-pollRouter.post('/create-poll', pollController.createPoll);
+pollRouter.post('/create-poll', auth, pollController.createPoll);
+pollRouter.get('/my-polls', auth, pollController.getMyPolls);
+pollRouter.get('/all-polls', pollController.allPolls);
+pollRouter.get('/search', pollController.getPollByName);
 // You would add other routes here:
 // pollRouter.get('/', pollController.getMyPolls);
 // pollRouter.get('/:id', pollController.getPollById);

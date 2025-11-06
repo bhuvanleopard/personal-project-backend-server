@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 import login from './app/auth/routes/login.js';
 import dotenv from 'dotenv';
 import pollRouter from './app/poll/route_poll.js';
-import auth from './middleware/auth.js';
 dotenv.config();
 const db = process.env.MONGO_DB_URL;
 async function mongoDB() {
@@ -18,7 +17,7 @@ app.use(express.json());
 mongoDB();
 app.use("/sign-up", signUp);
 app.use("/login", login);
-app.use("rating-system", auth, pollRouter);
+app.use("/rating-system", pollRouter);
 app.use((_req, res) => { return res.status(401).json({ msg: 'undefined route' }); });
 app.listen(PORT, (err) => {
     if (err)
