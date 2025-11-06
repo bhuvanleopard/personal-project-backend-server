@@ -4,10 +4,10 @@ import rating_system_users from '../model.js';
 
 const signUp = express.Router();
 
-signUp.get("/rating-system", signUpController(rating_system_users));
+signUp.post("/rating-system", signUpController(rating_system_users));
 
-signUp.get("/catering-service", ()=>{});
+signUp.post("/catering-service", ()=>{});
 
-signUp.get("/task-manager", ()=>{});
+signUp.post("/task-manager", ()=>{});
 
 export default signUp

@@ -1,5 +1,6 @@
 import jwt, {type JwtPayload } from 'jsonwebtoken';
 import type { Request, Response, NextFunction } from 'express';
+import dotenv from 'dotenv'; dotenv.config();
 
 interface AuthRequest extends Request {
 

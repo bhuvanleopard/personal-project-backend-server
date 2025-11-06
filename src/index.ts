@@ -3,6 +3,7 @@ import cors from 'cors';
 import signUp from './app/auth/routes/signUp.js';
 import mongoose from 'mongoose';
 import login from './app/auth/routes/login.js';
+import dotenv from 'dotenv'; dotenv.config();
 
 const db = process.env.MONGO_DB_URL!;
 
@@ -10,7 +11,7 @@ async function mongoDB(){
 
   await mongoose.connect(db)
 } 
-const PORT = Number(process.env.PORT!) || 3008;
+const PORT = Number(process.env.PORT!)
 
 const app = express();
 
