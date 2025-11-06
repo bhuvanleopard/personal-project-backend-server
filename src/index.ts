@@ -3,7 +3,10 @@ import cors from 'cors';
 import signUp from './app/auth/routes/signUp.js';
 import mongoose from 'mongoose';
 import login from './app/auth/routes/login.js';
-import dotenv from 'dotenv'; dotenv.config();
+import dotenv from 'dotenv';
+import pollRouter from './app/poll/route_poll.js';
+import auth from './middleware/auth.js';
+ dotenv.config();
 
 const db = process.env.MONGO_DB_URL!;
 
@@ -22,6 +25,7 @@ mongoDB()
 
 app.use("/sign-up", signUp);
 app.use("/login", login);
+app.use("rating-system",auth, pollRouter)
 
 app.use((_req, res)=>{return res.status(401).json({msg: 'undefined route'})});
 

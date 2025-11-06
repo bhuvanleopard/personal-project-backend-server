@@ -18,21 +18,20 @@ export const LoginController = (model:Model<User>)=>{
             
             if(!isPresent) return res.status(400).send({msg: "invalid try"})
             
-            bcrypt.compare(password, isPresent.password, (err, isAuth)=>{
+            const match = await bcrypt.compare(password, isPresent.password);
 
-                if(err|| !isAuth){
+            if(match){
 
-                    return res.status(400).json({msg: "failed"})
-                }
-            })
 
-            const token = jwt.sign({
+                const token = jwt.sign({
 
-                userId: isPresent._id,
-                email: isPresent.email
-            }, process.env.JWT_SECRET!, {expiresIn: '2h'} );
-            
-        return res.status(200).json({msg: "successful", token})
+                    userId: isPresent._id,
+                    email: isPresent.email
+                }, process.env.JWT_SECRET!, {expiresIn: '2h'} );
+                
+                return res.status(200).json({msg: "successful", token})
+
+            }
 
         }catch(err){
 
